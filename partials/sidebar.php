@@ -14,7 +14,7 @@
           <img src="<?php echo $base_url; ?>assets/img/avatar2.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="<?php echo $base_url; ?>pages/dokter/profil" class="d-block" style="text-decoration: none;"><b><?php echo $_SESSION['nama']; ?></b></a>
+          <a href="#" class="d-block" style="text-decoration: none;"><b><?php echo $_SESSION['nama']; ?></b></a>
         </div>
       </div>
       <!-- SidebarSearch Form -->
