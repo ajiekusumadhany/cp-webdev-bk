@@ -1,0 +1,15 @@
+.swal2-select {
+  width: 57% !important;
+  max-width: 57% !important;
+  box-sizing: border-box !important;
+  margin: 0.5em 0 !important;
+  border-radius: 3px;
+}
+.feature-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  width: 4rem;
+  font-size: 2rem;
+}
