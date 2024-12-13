@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 13 Des 2024 pada 15.26
+-- Waktu pembuatan: 13 Des 2024 pada 16.04
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -68,7 +68,20 @@ CREATE TABLE `dokter` (
 INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`, `id_poli`) VALUES
 (21, 'Zephyradddd', 'semarang', '81234567890', 1),
 (22, 'inidokter', 'semarang', '81234567890', 1),
-(23, 'ab', 'kudus', '89689367333', 2);
+(23, 'ab', 'kudus', '89689367333', 1),
+(25, 'Dr. Stephen Strange', 'Jakarta', '081234567890', 1),
+(26, 'Dr. Natasha Romanoff', 'Bandung', '082345678901', 1),
+(27, 'Dr. Bruce Banner', 'Bogor', '083456789012', 2),
+(28, 'Dr. Peter Venkman', 'Surabaya', '084567890123', 1),
+(29, 'Dr. Tony Stark', 'Yogyakarta', '085678901234', 2),
+(30, 'Dr. Diana Prince', 'Semarang', '086789012345', 1),
+(31, 'Dr. Clark Kent', 'Bali', '087890123456', 2),
+(32, 'Dr. Matt Murdock', 'Malang', '088901234567', 1),
+(33, 'Dr. Barry Allen', 'Jakarta', '089012345678', 2),
+(34, 'Dr. Wade Wilson', 'Jakarta', '090123456789', 1),
+(35, 'Dr. Jessica Jones', 'Jakarta', '091234567890', 2),
+(36, 'Dr. Frank Castle', 'Jakarta', '092345678901', 1),
+(37, 'Dr. Stone', 'kudus', '81256829034', 1);
 
 -- --------------------------------------------------------
 
@@ -133,7 +146,6 @@ INSERT INTO `obat` (`id`, `nama_obat`, `kemasan`, `harga`) VALUES
 (29, 'Ketoprofen', 'Tablet', 5000),
 (30, 'Naproxen', 'Tablet', 4000),
 (31, 'Ibuprofen', 'Tablet', 3000),
-(32, 'Aspirin', 'Tablet', 2000),
 (33, 'Paracetamol', 'Tablet', 1000),
 (34, 'Kodein', 'Tablet', 8000),
 (35, 'Morfina', 'Tablet', 6000),
@@ -175,7 +187,25 @@ CREATE TABLE `pasien` (
 
 INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_ktp`, `no_hp`, `no_rm`) VALUES
 (80, 'ajiekusumadhany', 'kudus', '1234567890987890', '082241929544', '202412-001'),
-(82, 'inipasien', 'semarang', '9086754890764678', '082241929544', '202412-002');
+(82, 'inipasien', 'semarang', '9086754890764678', '082241929544', '202412-002'),
+(102, 'Alice Wonderland', 'Bogor', '3456789012345678', '083456789012', '202412-003'),
+(103, 'Bob Builder', 'Surabaya', '4567890123456789', '084567890123', '202412-004'),
+(104, 'Harry Potter', 'Yogyakarta', '5678901234567890', '085678901234', '202412-005'),
+(105, 'Katniss Everdeen', 'Semarang', '6789012345678901', '086789012345', '202412-006'),
+(106, 'Frodo Baggins', 'Bali', '7890123456789012', '087890123456', '202412-007'),
+(107, 'Sherlock Holmes', 'Malang', '8901234567890123', '088901234567', '202412-008'),
+(108, 'Wonder Woman', 'Jakarta', '9012345678901234', '089012345678', '202412-009'),
+(109, 'Tony Stark', 'Jakarta', '0123456789012345', '090123456789', '202412-010'),
+(110, 'Bruce Wayne', 'Jakarta', '1234567890123450', '091234567890', '202412-011'),
+(111, 'Peter Parker', 'Jakarta', '2345678901234561', '092345678901', '202412-012'),
+(112, 'Clark Kent', 'Jakarta', '3456789012345672', '093456789012', '202412-013'),
+(113, 'Daenerys Targaryen', 'Bali', '4567890123456783', '094567890123', '202412-014'),
+(114, 'Luke Skywalker', 'Jakarta', '5678901234567894', '095678901234', '202412-015'),
+(115, 'Hermione Granger', 'Bandung', '6789012345678905', '096789012345', '202412-016'),
+(116, 'Dumbledore', 'Yogyakarta', '7890123456789016', '097890123456', '202412-017'),
+(117, 'Katara', 'Semarang', '8901234567890127', '098901234567', '202412-018'),
+(118, 'Gollum', 'Bogor', '9012345678901238', '099012345678', '202412-019'),
+(119, 'Simba', 'Bali', '0123456789012349', '100123456789', '202412-020');
 
 -- --------------------------------------------------------
 
@@ -210,7 +240,8 @@ CREATE TABLE `poli` (
 INSERT INTO `poli` (`id`, `nama_poli`, `keterangan`) VALUES
 (1, 'Poli Umum', 'Dokter Umum'),
 (2, 'Poli Gigi', 'Dokter Gigi'),
-(3, 'Poli Mata', 'Dokter Mata');
+(9, 'Poli THT', 'Pelayanan kesehatan untuk telinga, hidung, dan tenggorokan.'),
+(10, 'Poli Saraf', 'Pelayanan kesehatan untuk masalah saraf.');
 
 --
 -- Indexes for dumped tables
@@ -291,7 +322,7 @@ ALTER TABLE `detail_periksa`
 -- AUTO_INCREMENT untuk tabel `dokter`
 --
 ALTER TABLE `dokter`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT untuk tabel `jadwal_periksa`
@@ -309,7 +340,7 @@ ALTER TABLE `obat`
 -- AUTO_INCREMENT untuk tabel `pasien`
 --
 ALTER TABLE `pasien`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT untuk tabel `periksa`
@@ -321,7 +352,7 @@ ALTER TABLE `periksa`
 -- AUTO_INCREMENT untuk tabel `poli`
 --
 ALTER TABLE `poli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
