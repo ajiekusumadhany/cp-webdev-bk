@@ -1,4 +1,4 @@
-# Panduan Instalasi Proyek PHP Native
+# Panduan Instalasi Proyek Web Poliklinik
 
 Berikut adalah langkah-langkah untuk menginstal proyek web poliklinik.
 
