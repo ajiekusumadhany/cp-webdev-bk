@@ -1,6 +1,6 @@
 # Panduan Instalasi Proyek PHP Native
 
-Berikut adalah langkah-langkah untuk menginstal proyek PHP native yang di-clone dari GitHub.
+Berikut adalah langkah-langkah untuk menginstal proyek web poliklinik.
 
 ## Prasyarat
 Sebelum memulai, pastikan Anda telah menginstal perangkat lunak berikut:
