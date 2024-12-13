@@ -1,7 +1,3 @@
-<?php
-// Definisikan base URL
-$base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/cp-webdev-bk/';
-?>
 <?php 
 session_start();
 require_once 'koneksi/koneksi.php'; 
@@ -35,10 +31,6 @@ $jumlah_dokter = $data_dokter['jumlah_dokter'];
     <title>Sistem Temu Janji Poliklinik</title>
     <meta name="description" content="Sistem Temu Janji Poliklinik" />
     <meta name="keywords" content="poliklinik" />
-
-    <!-- Favicons -->
-    <link rel="shortcut icon" href="<?php echo $base_url; ?>assets/img/logo.png" type="image/x-icon">
-
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />

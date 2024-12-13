@@ -1,6 +1,17 @@
 <?php
 // Definisikan base URL
-$base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/cp-webdev-bk/';
+// Mendapatkan URL saat ini
+$current_url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+// Memecah URL menjadi bagian-bagian
+$url_parts = explode('/', $current_url);
+
+// Mengambil nama folder proyek (elemen kedua dalam array)
+$project_name = $url_parts[3]; // Indeks 3 adalah elemen keempat (0-indexed)
+
+// Menghasilkan base URL
+$base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/' . $project_name . '/';
+
 ?>
   <link rel="shortcut icon" href="<?php echo $base_url; ?>assets/img/logo.png" type="image/x-icon">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
