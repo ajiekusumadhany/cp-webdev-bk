@@ -28,9 +28,7 @@ $base_url = 'http://' . $_SERVER['HTTP_HOST'] . '/cp-webdev-bk/';
   <!-- summernote -->
   <link rel="stylesheet" href="<?php echo $base_url; ?>plugins/summernote/summernote-bs4.min.css">
   <!-- datatables -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap5.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
   a {

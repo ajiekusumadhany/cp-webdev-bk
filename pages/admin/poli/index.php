@@ -157,7 +157,7 @@ if (!$result) {
     <button class="mb-3 btn btn-primary" onclick="showPoliForm('add');"><i class="bi bi-person-plus-fill"></i> Tambah Poli</button>
     
     <div class="card-body table-responsive">
-    <table id="example1" class="table table-striped">
+    <table id="myTable" class="table table-striped">
       <thead>
         <tr>
           <th scope="col">No</th>

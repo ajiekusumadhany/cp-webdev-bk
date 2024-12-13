@@ -159,7 +159,7 @@ if (!$result) {
   </div>
   <div class="card-body">
     
-    <table id="example" class="table table-striped" >
+    <table id="myTable" class="table table-striped" >
       <thead>
         <tr>
           <th scope="col">No</th>
