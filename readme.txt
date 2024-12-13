@@ -12,9 +12,7 @@ Sebelum memulai, pastikan Anda telah menginstal perangkat lunak berikut:
 
 1. **Clone Repository**
    Buka terminal atau command prompt, lalu jalankan perintah berikut untuk meng-clone repository:
-   ```bash
    git clone https://github.com/ajiekusumadhany/cp-webdev-bk.git
-   ```
 
 2. **Pindahkan Folder Proyek**
    Setelah proses cloning selesai, pindahkan folder proyek ke direktori `htdocs` (untuk XAMPP) atau `www` (untuk WAMP). Contoh:
