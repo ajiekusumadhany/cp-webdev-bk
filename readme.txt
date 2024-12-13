@@ -18,9 +18,6 @@ Sebelum memulai, pastikan Anda telah menginstal perangkat lunak berikut:
 
 2. **Pindahkan Folder Proyek**
    Setelah proses cloning selesai, pindahkan folder proyek ke direktori `htdocs` (untuk XAMPP) atau `www` (untuk WAMP). Contoh:
-   ```bash
-   mv cp-webdev-bk /path/to/xampp/htdocs/
-   ```
 
 3. **Konfigurasi Database**
    - Pastikan Apache dan MySQL di XAMPP atau WAMP sudah berjalan.
