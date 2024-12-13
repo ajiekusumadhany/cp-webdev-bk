@@ -52,7 +52,7 @@ Sebelum memulai, pastikan Anda telah menginstal perangkat lunak berikut:
    Jadi untuk password pasien dan dokter itu menggunakan alamat
 
 
-Selamat! Anda telah berhasil menginstal dan menjalankan proyek PHP native dari GitHub.
+Selamat! Anda telah berhasil menginstal dan menjalankan proyek web poliklinik!
 
 ## Catatan
-- Jika terdapat masalah bisa menghubungi [email ajiekusumadhany@gmail.com](mailto:ajiekusumadhany@gmail.com)
+- Jika terdapat masalah bisa menghubungi ajiekusumadhany@gmail.com
