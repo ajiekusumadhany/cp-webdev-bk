@@ -31,9 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     } else {
         $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Gagal menyiapkan query: ' . $mysqli->error];
     }
-    
-    header('Location: index.php?page=obat');
-    exit;
 }
 
 // Cek apakah ada ID yang dikirimkan melalui GET untuk edit
@@ -96,8 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (isset($error_message)) {
         $_SESSION['flash_message'] = ['type' => 'error', 'message' => $error_message];
     }
-    header('Location: index.php?page=obat');
-    exit;
+
 }
 
 // Query untuk mengambil data obat

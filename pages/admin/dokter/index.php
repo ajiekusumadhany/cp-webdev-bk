@@ -30,9 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     } else {
         $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Gagal menyiapkan query: ' . $mysqli->error];
     }
-    
-    header('Location: index.php?page=dokter');
-    exit;
 }
 
 // Proses penyimpanan atau update data
@@ -179,7 +176,7 @@ if (!$result) {
         echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
         echo "<td>" . htmlspecialchars($row['alamat']) . "</td>";
         echo "<td>" . htmlspecialchars($row['no_hp']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['nama_poli']) . "</td>"; // Tampilkan hanya nama poli
+        echo "<td>" . htmlspecialchars($row['nama_poli']) . "</td>";
         echo "<td>
     <button class='btn btn-sm btn-success' onclick='showDoctorForm(\"edit\", " . $row['id'] . ", \"" . addslashes($row['nama']) . "\", \"" . addslashes($row['alamat']) . "\", \"" . addslashes($row['no_hp']) . "\", \"" . addslashes($row['id_poli']) . "\")'><i class='bi bi-pencil-square'></i> Edit</button>
     <button class='btn btn-sm btn-danger' onclick='deleteDokter(" . $row['id'] . ")'><i class='bi bi-trash-fill'></i> Hapus</button>
