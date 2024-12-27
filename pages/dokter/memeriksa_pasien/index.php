@@ -67,7 +67,7 @@ if (!$periksa_pasien) {
       <div class="container-fluid">
         <div class="card">
           <div class="card-body p-0">
-            <table class="table" id="myTable">
+            <table class="table">
               <thead>
                 <tr>
                   <th style="width: 8%">No Urut</th>

@@ -27,13 +27,13 @@ if (!$row_pasien) {
 $query_poli = "SELECT * FROM poli";
 $result_poli = $mysqli->query($query_poli);
 
-// Ambil semua jadwal
+// Get all schedules
 $query_jadwal = "SELECT j.*, d.id_poli 
                  FROM jadwal_periksa j 
                  JOIN dokter d ON j.id_dokter = d.id";
 $result_jadwal = $mysqli->query($query_jadwal);
 
-// Simpan semua jadwal dalam array
+// Store all schedules in an array
 $jadwal_list = [];
 while ($row_jadwal = $result_jadwal->fetch_assoc()) {
     $jadwal_list[] = $row_jadwal;
@@ -44,16 +44,16 @@ if (isset($_POST['submit'])) {
     $id_jadwal = $_POST['id_jadwal'];
     $keluhan = $_POST['keluhan'];
 
-// Hitung nomor antrian berdasarkan id_jadwal
-$query_no_antrian = "SELECT MAX(no_antrian) AS max_antrian FROM daftar_poli WHERE id_jadwal = ?";
-$stmt_no_antrian = $mysqli->prepare($query_no_antrian);
-$stmt_no_antrian->bind_param("i", $id_jadwal);
-$stmt_no_antrian->execute();
-$result_no_antrian = $stmt_no_antrian->get_result();
-$row_no_antrian = $result_no_antrian->fetch_assoc();
+    // Calculate queue number based on id_jadwal
+    $query_no_antrian = "SELECT MAX(no_antrian) AS max_antrian FROM daftar_poli WHERE id_jadwal = ?";
+    $stmt_no_antrian = $mysqli->prepare($query_no_antrian);
+    $stmt_no_antrian->bind_param("i", $id_jadwal);
+    $stmt_no_antrian->execute();
+    $result_no_antrian = $stmt_no_antrian->get_result();
+    $row_no_antrian = $result_no_antrian->fetch_assoc();
 
-// Nomor antrian adalah max_antrian + 1, jika tidak ada pendaftaran sebelumnya, set nomor antrian ke 1
-$no_antrian = $row_no_antrian['max_antrian'] ? $row_no_antrian['max_antrian'] + 1 : 1;
+    // Queue number is max_antrian + 1, if no previous registration, set queue number to 1
+    $no_antrian = $row_no_antrian['max_antrian'] ? $row_no_antrian['max_antrian'] + 1 : 1;
 
     // Insert into daftar_poli table
     $query_insert = "INSERT INTO daftar_poli (id_pasien, id_jadwal, keluhan, no_antrian) VALUES (?, ?, ?, ?)";
@@ -72,12 +72,13 @@ $no_antrian = $row_no_antrian['max_antrian'] ? $row_no_antrian['max_antrian'] + 
     exit;
 }
 
-// riwayat pendaftaran poli
-$query_riwayat = "SELECT dp.*, p.nama_poli, d.nama AS dokter_nama, j.hari, j.jam_mulai, j.jam_selesai 
+// Retrieve registration history
+$query_riwayat = "SELECT dp.*, p.nama_poli, d.nama AS dokter_nama, j.hari, j.jam_mulai, j.jam_selesai, pr.tgl_periksa 
                   FROM daftar_poli dp 
                   JOIN jadwal_periksa j ON dp.id_jadwal = j.id 
                   JOIN dokter d ON j.id_dokter = d.id 
                   JOIN poli p ON d.id_poli = p.id 
+                  LEFT JOIN periksa pr ON dp.id = pr.id_daftar_poli
                   WHERE dp.id_pasien = ?";
 $stmt_riwayat = $mysqli->prepare($query_riwayat);
 $stmt_riwayat->bind_param("i", $id_pasien);
@@ -87,23 +88,23 @@ $result_riwayat = $stmt_riwayat->get_result();
 ?>
 
 <script>
-    // Simpan jadwal dalam variabel JavaScript
+    // Store schedules in a JavaScript variable
     var jadwalList = <?php echo json_encode($jadwal_list); ?>;
 
     function updateJadwal() {
-        var poliId = document.getElementById("inputPoli").value; // Ambil nilai poli yang dipilih
-        var jadwalSelect = document.getElementById("inputJadwal"); // Ambil elemen dropdown jadwal
+        var poliId = document.getElementById("inputPoli").value; // Get the selected poli value
+        var jadwalSelect = document.getElementById("inputJadwal"); // Get the jadwal dropdown element
 
-        // Kosongkan dropdown jadwal
+        // Clear the jadwal dropdown
         jadwalSelect.innerHTML = '<option value="">Open this select menu</option>';
 
-        // Filter jadwal berdasarkan poli yang dipilih
+        // Filter schedules based on the selected poli
         jadwalList.forEach(function(jadwal) {
-            if (jadwal.id_poli == poliId) { // Cek apakah id_poli dari jadwal sama dengan poli yang dipilih
-                var option = document.createElement("option"); // Buat elemen option baru
-                option.value = jadwal.id; // Set nilai option dengan id jadwal
-                option.text = jadwal.hari + ' - ' + jadwal.jam_mulai + ' s/d ' + jadwal.jam_selesai; // Set teks option
-                jadwalSelect.appendChild(option); // Tambahkan option ke dropdown jadwal
+            if (jadwal.id_poli == poliId) { 
+                var option = document.createElement("option");
+                option.value = jadwal.id; 
+                option.text = jadwal.hari + ' - ' + jadwal.jam_mulai + ' s/d ' + jadwal.jam_selesai;
+                jadwalSelect.appendChild(option); 
             }
         });
     }
@@ -148,7 +149,8 @@ $result_riwayat = $stmt_riwayat->get_result();
       <div class="row">
         <div class="col-4">
           <!-- Registration poli -->
-          <div class="card <h5 class="card-header bg-primary">Daftar Poli</h5>
+          <div class="card">
+            <h5 class="card-header bg-primary">Daftar Poli</h5>
             <div class="card-body">
 
               <form action="" method="POST">
@@ -193,6 +195,7 @@ $result_riwayat = $stmt_riwayat->get_result();
           <!-- Registration poli history -->
           <div class="card">
             <h5 class="card-header bg-primary">Riwayat daftar poli</h5>
+            <div class ```php
             <div class="card-body">
             <table class="table table-striped">
                 <thead>
@@ -209,34 +212,43 @@ $result_riwayat = $stmt_riwayat->get_result();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($result_riwayat->num_rows > 0): ?>
-                        <?php $no = 1; while ($row_riwayat = $result_riwayat->fetch_assoc()): ?>
-                            <tr>
-                                <td><?php echo $no++; ?></td>
-                                <td><?php echo htmlspecialchars($row_riwayat['nama_poli']); ?></td>
-                                <td><?php echo htmlspecialchars($row_riwayat['dokter_nama']); ?></td>
-                                <td><?php echo htmlspecialchars($row_riwayat['hari']); ?></td>
-                                <td><?php echo htmlspecialchars($row_riwayat['jam_mulai']); ?></td>
-                                <td><?php echo htmlspecialchars($row_riwayat['jam_selesai']); ?></td>
-                                <td><?php echo htmlspecialchars($row_riwayat['no_antrian']); ?></td>
-                                <td>
-                                    <?php if ($row_riwayat['status_periksa'] == 0): ?>
-                                        <span class="badge bg-danger">Belum diperiksa</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-success">Sudah diperiksa</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <a href="detail_poli.php?id=<?php echo $row_riwayat['id']; ?>" class="btn btn-primary btn-sm">Detail</a>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
+                <?php if ($result_riwayat->num_rows > 0): ?>
+                    <?php $no = 1; while ($row_riwayat = $result_riwayat->fetch_assoc()): ?>
                         <tr>
-                            <td colspan="9" class="text-center">Tidak ada data</td>
+                            <th scope="row"><?php echo $no++; ?></th>
+                            <td><?php echo htmlspecialchars($row_riwayat['nama_poli']); ?></td>
+                            <td><?php echo htmlspecialchars($row_riwayat['dokter_nama']); ?></td>
+                            <td><?php echo htmlspecialchars($row_riwayat['hari']); ?></td>
+                            <td><?php echo htmlspecialchars($row_riwayat['jam_mulai']); ?></td>
+                            <td><?php echo htmlspecialchars($row_riwayat['jam_selesai']); ?></td>
+                            <td><?php echo htmlspecialchars($row_riwayat['no_antrian']); ?></td>
+                            <td>
+                                <?php if ($row_riwayat['status_periksa'] == 0): ?>
+                                    <span class="badge bg-danger">Belum diperiksa</span>
+                                <?php else: ?>
+                                    <span class="badge bg-success">Sudah diperiksa</span><br>
+                                    <span class="badge bg-default text-dark"><i><?php echo htmlspecialchars($row_riwayat['tgl_periksa']); ?></i></span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($row_riwayat['status_periksa'] == 0): ?>
+                                    <a href="detail_poli.php?id=<?php echo $row_riwayat['id']; ?>">
+                                        <button class="btn btn-info btn-sm">Detail</button>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="detail_poli_periksa.php?id=<?php echo $row_riwayat['id']; ?>">
+                                        <button class="btn btn-success btn-sm">Riwayat</button>
+                                    </a>
+                                <?php endif; ?>
+                            </td>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="9" class="text-center">Tidak ada data</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
             </table>
             </div>
           </div>

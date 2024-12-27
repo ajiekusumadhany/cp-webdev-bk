@@ -60,9 +60,6 @@ if (isset($_POST['submit'])) {
     } elseif (isset($error_message)) {
         $_SESSION['flash_message'] = ['type' => 'error', 'message' => $error_message];
     }
-
-    header('Location: ./'); // Redirect ke halaman yang sesuai setelah proses
-    exit;
 }
 ?>
 
@@ -149,7 +146,8 @@ if (isset($_POST['submit'])) {
     <!-- /.content -->
   </div>
 
-  <?php
+  <script>
+    <?php
 if (isset($_SESSION['flash_message'])) {
     $type = $_SESSION['flash_message']['type'];
     $message = $_SESSION['flash_message']['message'];
@@ -174,6 +172,7 @@ if (isset($_SESSION['flash_message'])) {
     unset($_SESSION['flash_message']);
 }
 ?>
+  </script>
   <!-- /.content-wrapper -->
   <?php include '../../../partials/footer.php'?>
 

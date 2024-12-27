@@ -159,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan_periksa'])) {
 
               <div class="form-group">
                 <label for="total_harga">Total Harga</label>
-                <input type="text" class="form-control" id="harga" name="harga" readonly>
+                <input type="text" class="form-control" id="totalBiaya" name="harga" readonly>
               </div>
 
               <!-- Tombol untuk mengirim form -->
@@ -200,17 +200,28 @@ $(document).ready(function() {
         allowClear: true
     });
 
-// Update total harga saat obat dipilih
-$('#obat').on('change', function() {
-    let total = 0;
-    $(this).find(':selected').each(function() {
-        // Ambil harga dari teks opsi
-        const hargaText = $(this).text(); // Ambil teks dari opsi
-        const harga = parseInt(hargaText.match(/Rp\.(\d+(\.\d+)?)/)[1].replace(/\./g, '')); // Ambil harga dan hapus titik
-        total += harga; // Tambahkan harga ke total
+    // Biaya jasa dokter
+    const biayaJasaDokter = 150000; // Rp. 150.000
+
+    // Update total harga saat obat dipilih
+    $('#obat').on('change', function() {
+        let totalObat = 0; // Inisialisasi total obat
+
+        // Hitung total harga obat
+        $(this).find(':selected').each(function() {
+            // Ambil harga dari teks opsi
+            const hargaText = $(this).text(); // Ambil teks dari opsi
+            const harga = parseInt(hargaText.match(/Rp\.(\d+(\.\d+)?)/)[1].replace(/\./g, '')); // Ambil harga dan hapus titik
+            totalObat += harga; // Tambahkan harga ke total obat
+        });
+
+        // Hitung total biaya periksa
+        const totalBiayaPeriksa = totalObat + biayaJasaDokter; // Total biaya = total obat + biaya jasa dokter
+
+        // Format dan tampilkan total harga obat
+        $('#harga').val('Rp.' + totalObat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')); // Menampilkan total harga obat
+        $('#totalBiaya').val('Rp.' + totalBiayaPeriksa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')); // Menampilkan total biaya periksa
     });
-    $('#harga').val('Rp.' + total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')); // Format total harga
-});
 });
 </script>
 
