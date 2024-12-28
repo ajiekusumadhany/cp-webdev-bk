@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 28 Des 2024 pada 00.54
+-- Waktu pembuatan: 28 Des 2024 pada 03.29
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -42,7 +42,10 @@ CREATE TABLE `daftar_poli` (
 
 INSERT INTO `daftar_poli` (`id`, `id_pasien`, `id_jadwal`, `keluhan`, `no_antrian`, `status_periksa`) VALUES
 (12, 82, 5, 'sakit gigi', 1, 1),
-(13, 82, 6, 'pusing', 1, 0);
+(13, 82, 6, 'pusing', 1, 0),
+(14, 82, 2, 'batuk', 1, 1),
+(15, 82, 1, 'flue', 1, 1),
+(16, 82, 6, 'sakit kepala pusing', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -63,7 +66,19 @@ CREATE TABLE `detail_periksa` (
 INSERT INTO `detail_periksa` (`id`, `id_periksa`, `id_obat`) VALUES
 (8, 5, 2),
 (9, 5, 4),
-(10, 5, 34);
+(10, 5, 34),
+(11, 6, 3),
+(12, 6, 14),
+(13, 6, 15),
+(58, 7, 2),
+(59, 7, 3),
+(60, 7, 4),
+(61, 7, 5),
+(62, 7, 15),
+(72, 8, 2),
+(73, 8, 5),
+(74, 8, 20),
+(75, 8, 23);
 
 -- --------------------------------------------------------
 
@@ -84,7 +99,7 @@ CREATE TABLE `dokter` (
 --
 
 INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`, `id_poli`) VALUES
-(22, 'inidokter', 'semarang', '082241929544', 1),
+(22, 'inidokter', 'semarang', '082241989089', 1),
 (25, 'Dr. Stephen Strange', 'Jakarta', '081234567890', 1),
 (26, 'Dr. Natasha Romanoff', 'Bandung', '082345678901', 1),
 (27, 'Dr. Bruce Banner', 'Bogor', '083456789012', 2),
@@ -122,7 +137,11 @@ INSERT INTO `jadwal_periksa` (`id`, `id_dokter`, `hari`, `jam_mulai`, `jam_seles
 (2, 22, 'Selasa', '21:24:00', '23:26:00', 'Y'),
 (4, 22, 'Rabu', '21:30:00', '23:27:00', 'Y'),
 (5, 25, 'Selasa', '01:14:00', '02:20:00', 'N'),
-(6, 22, 'Jumat', '07:00:00', '09:00:00', 'N');
+(6, 22, 'Jumat', '07:00:00', '09:00:00', 'N'),
+(7, 22, 'Rabu', '10:00:00', '12:00:00', 'Y'),
+(8, 22, 'Jumat', '09:30:00', '12:30:00', 'N'),
+(9, 22, 'Sabtu', '09:30:00', '10:30:00', 'Y'),
+(10, 22, 'Sabtu', '15:00:00', '17:00:00', 'Y');
 
 -- --------------------------------------------------------
 
@@ -257,7 +276,10 @@ CREATE TABLE `periksa` (
 --
 
 INSERT INTO `periksa` (`id`, `id_daftar_poli`, `tgl_periksa`, `catatan`, `biaya_periksa`) VALUES
-(5, 12, '2024-12-27 22:30:00', 'Banyak minum air', 162000);
+(5, 12, '2024-12-27 22:30:00', 'Banyak minum air', 162000),
+(6, 14, '2024-12-28 08:00:00', 'Banyak minum air', 163000),
+(7, 15, '2024-12-28 08:27:00', 'halo', 161000),
+(8, 16, '2024-12-28 08:52:00', 'diminum 2x sehari', 173000);
 
 -- --------------------------------------------------------
 
@@ -348,13 +370,13 @@ ALTER TABLE `poli`
 -- AUTO_INCREMENT untuk tabel `daftar_poli`
 --
 ALTER TABLE `daftar_poli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT untuk tabel `detail_periksa`
 --
 ALTER TABLE `detail_periksa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT untuk tabel `dokter`
@@ -366,7 +388,7 @@ ALTER TABLE `dokter`
 -- AUTO_INCREMENT untuk tabel `jadwal_periksa`
 --
 ALTER TABLE `jadwal_periksa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `obat`
@@ -384,7 +406,7 @@ ALTER TABLE `pasien`
 -- AUTO_INCREMENT untuk tabel `periksa`
 --
 ALTER TABLE `periksa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `poli`
