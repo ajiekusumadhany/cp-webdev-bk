@@ -71,10 +71,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan_periksa'])) {
   $catatan = $_POST['catatan'];
   $obat_ids = $_POST['obat_ids'] ?? []; // Ambil obat yang dipilih
 
+  // Hitung total biaya obat
+  $totalBiayaObat = 0;
+  foreach ($obat_ids as $id_obat) {
+      // Ambil harga obat dari database
+      $query_harga_obat = "SELECT harga FROM obat WHERE id = ?";
+      $stmt_harga_obat = $mysqli->prepare($query_harga_obat);
+      $stmt_harga_obat->bind_param("i", $id_obat);
+      $stmt_harga_obat->execute();
+      $result_harga_obat = $stmt_harga_obat->get_result();
+      
+      if ($row_harga_obat = $result_harga_obat->fetch_assoc()) {
+          $totalBiayaObat += $row_harga_obat['harga'];
+      }
+  }
+
+  // Total biaya periksa
+  $biayaJasaDokter = 150000; // Rp. 150.000
+  $totalBiayaPeriksa = $totalBiayaObat + $biayaJasaDokter;
+
   // Update data pemeriksaan
-  $query_update = "UPDATE periksa SET tgl_periksa = ?, catatan = ? WHERE id = ?";
+  $query_update = "UPDATE periksa SET tgl_periksa = ?, catatan = ?, biaya_periksa = ? WHERE id = ?";
   $stmt_update = $mysqli->prepare($query_update);
-  $stmt_update->bind_param("ssi", $tgl_periksa, $catatan, $id_periksa);
+  $stmt_update->bind_param("ssii", $tgl_periksa, $catatan, $totalBiayaPeriksa, $id_periksa);
   
   if ($stmt_update->execute()) {
       // Hapus detail_periksa yang lama
@@ -82,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan_periksa'])) {
       $stmt_delete_detail = $mysqli->prepare($query_delete_detail);
       $stmt_delete_detail->bind_param("i", $id_periksa);
       
-      if ($stmt_delete_detail->execute()) {
+if ($stmt_delete_detail->execute()) {
           // Insert detail_periksa yang baru
           $insert_success = true; // Flag to check if all inserts are successful
           foreach ($obat_ids as $id_obat) {
@@ -91,8 +110,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan_periksa'])) {
               $stmt_insert_detail->bind_param("ii", $id_periksa, $id_obat);
               
               if (!$stmt_insert_detail->execute()) {
-                  $insert_success = false; // If any insert fails, set flag to false
-                  break; // Exit the loop on first failure
+                  $insert_success = false;
+                  break; 
               }
           }
 
@@ -108,7 +127,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan_periksa'])) {
   } else {
       $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Gagal memperbarui data pemeriksaan: ' . $stmt_update->error];
   }
-
 }
 
 ?>
