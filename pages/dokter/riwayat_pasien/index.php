@@ -200,18 +200,14 @@ while ($row = mysqli_fetch_assoc($result)):
 <!-- Modal Detail Riwayat Periksa ends here -->
 
   </div>
+  <!-- /.control-sidebar -->
   <!-- /.content-wrapper -->
   <?php include '../../../partials/footer.php'?>
+    <!-- Js file -->
+    <?php include '../../../partials/js.php'?>
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 
-<!-- Js file -->
-<?php include '../../../partials/js.php'?>
 </body>
 </html>

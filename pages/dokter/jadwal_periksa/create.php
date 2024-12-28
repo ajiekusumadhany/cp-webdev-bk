@@ -127,33 +127,38 @@ if (isset($_POST['submit'])) {
     <!-- /.content -->
   </div>
 
-<script>
-      <?php
+  <script>
+    <?php
     if (isset($_SESSION['flash_message'])) {
-    $type = $_SESSION['flash_message']['type'];
-    $message = $_SESSION['flash_message']['message'];
-    
-    $buttonColor = '#3085d6';
-    if ($type === 'success') {
-        $buttonColor = '#28a745';
-    } elseif ($type === 'error') {
-        $buttonColor = '#dc3545'; 
-    } elseif ($type === 'warning') {
-        $buttonColor = '#ffc107'; 
-    }
-    echo "
-    Swal.fire({
-        title: '" . ucfirst($type) . "',
-        text: '$message',
-        icon: '$type',
-        confirmButtonColor: '$buttonColor'
-    });
-    ";
+        $type = $_SESSION['flash_message']['type'];
+        $message = $_SESSION['flash_message']['message'];
+        
+        $buttonColor = '#3085d6';
+        if ($type === 'success') {
+            $buttonColor = '#28a745';
+        } elseif ($type === 'error') {
+            $buttonColor = '#dc3545'; 
+        } elseif ($type === 'warning') {
+            $buttonColor = '#ffc107'; 
+        }
+        echo "
+        Swal.fire({
+            title: '" . ucfirst($type) . "',
+            text: '$message',
+            icon: '$type',
+            confirmButtonColor: '$buttonColor'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = './';
+            }
+        });
+        ";
 
-    unset($_SESSION['flash_message']);
-}
-?>
+        unset($_SESSION['flash_message']);
+    }
+    ?>
 </script>
+
 
   <!-- /.content-wrapper -->
   <?php include '../../../partials/footer.php'?>

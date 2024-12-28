@@ -71,8 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan_periksa'])) {
       $stmt_update->execute();
 
       $_SESSION['flash_message'] = ['type' => 'success', 'message' => 'Data pemeriksaan berhasil disimpan.'];
-      header("Location: ./");
-      exit;
   } else {
       $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Gagal menyimpan data: ' . $stmt_insert->error];
   }
@@ -224,6 +222,36 @@ $(document).ready(function() {
     });
 });
 </script>
+<script>
+    <?php
+    if (isset($_SESSION['flash_message'])) {
+        $type = $_SESSION['flash_message']['type'];
+        $message = $_SESSION['flash_message']['message'];
+        
+        $buttonColor = '#3085d6';
+        if ($type === 'success') {
+            $buttonColor = '#28a745';
+        } elseif ($type === 'error') {
+            $buttonColor = '#dc3545'; 
+        } elseif ($type === 'warning') {
+            $buttonColor = '#ffc107'; 
+        }
+        echo "
+        Swal.fire({
+            title: '" . ucfirst($type) . "',
+            text: '$message',
+            icon: '$type',
+            confirmButtonColor: '$buttonColor'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = './';
+            }
+        });
+        ";
 
+        unset($_SESSION['flash_message']);
+    }
+    ?>
+</script>
 </body>
 </html>

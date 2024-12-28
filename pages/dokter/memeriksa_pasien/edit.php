@@ -65,6 +65,52 @@ $stmt_obat = $mysqli->prepare($query_obat);
 $stmt_obat->execute();
 $result_obat = $stmt_obat->get_result();
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan_periksa'])) {
+  // Ambil data dari form
+  $tgl_periksa = $_POST['tgl_periksa'];
+  $catatan = $_POST['catatan'];
+  $obat_ids = $_POST['obat_ids'] ?? []; // Ambil obat yang dipilih
+
+  // Update data pemeriksaan
+  $query_update = "UPDATE periksa SET tgl_periksa = ?, catatan = ? WHERE id = ?";
+  $stmt_update = $mysqli->prepare($query_update);
+  $stmt_update->bind_param("ssi", $tgl_periksa, $catatan, $id_periksa);
+  
+  if ($stmt_update->execute()) {
+      // Hapus detail_periksa yang lama
+      $query_delete_detail = "DELETE FROM detail_periksa WHERE id_periksa = ?";
+      $stmt_delete_detail = $mysqli->prepare($query_delete_detail);
+      $stmt_delete_detail->bind_param("i", $id_periksa);
+      
+      if ($stmt_delete_detail->execute()) {
+          // Insert detail_periksa yang baru
+          $insert_success = true; // Flag to check if all inserts are successful
+          foreach ($obat_ids as $id_obat) {
+              $query_insert_detail = "INSERT INTO detail_periksa (id_periksa, id_obat) VALUES (?, ?)";
+              $stmt_insert_detail = $mysqli->prepare($query_insert_detail);
+              $stmt_insert_detail->bind_param("ii", $id_periksa, $id_obat);
+              
+              if (!$stmt_insert_detail->execute()) {
+                  $insert_success = false; // If any insert fails, set flag to false
+                  break; // Exit the loop on first failure
+              }
+          }
+
+          // Set flash message based on insert success
+          if ($insert_success) {
+              $_SESSION['flash_message'] = ['type' => 'success', 'message' => 'Data pemeriksaan berhasil disimpan.'];
+          } else {
+              $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Gagal menyimpan detail obat.'];
+          }
+      } else {
+          $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Gagal menghapus detail pemeriksaan: ' . $stmt_delete_detail->error];
+      }
+  } else {
+      $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Gagal memperbarui data pemeriksaan: ' . $stmt_update->error];
+  }
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -199,6 +245,36 @@ $(document).ready(function() {
     });
 });
 </script>
+<script>
+    <?php
+    if (isset($_SESSION['flash_message'])) {
+        $type = $_SESSION['flash_message']['type'];
+        $message = $_SESSION['flash_message']['message'];
+        
+        $buttonColor = '#3085d6';
+        if ($type === 'success') {
+            $buttonColor = '#28a745';
+        } elseif ($type === 'error') {
+            $buttonColor = '#dc3545'; 
+        } elseif ($type === 'warning') {
+            $buttonColor = '#ffc107'; 
+        }
+        echo "
+        Swal.fire({
+            title: '" . ucfirst($type) . "',
+            text: '$message',
+            icon: '$type',
+            confirmButtonColor: '$buttonColor'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = './';
+            }
+        });
+        ";
 
+        unset($_SESSION['flash_message']);
+    }
+    ?>
+</script>
 </body>
 </html>
