@@ -83,7 +83,6 @@ while ($row_obat = $result_obat->fetch_assoc()) {
   <?php include '../../../partials/sidebar.php'?>
 
   <!-- Content Wrapper. Contains page content -->
-  <div ```php
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">

@@ -26,12 +26,11 @@ Sebelum memulai, pastikan Anda telah menginstal perangkat lunak berikut:
 4. **Konfigurasi Koneksi Database**
    - Buka file `koneksi/koneksi.php` di dalam folder proyek.
    - Sesuaikan konfigurasi database (host, username, password, dan nama database) sesuai dengan pengaturan server lokal Anda. Contoh:
-     ```php
      $host = 'localhost';
      $user = 'root';
      $pass = '';
      $db = 'db_klinik';
-     ```
+
 
 5. **Menjalankan Proyek**
    - Pastikan Apache dan MySQL di XAMPP atau WAMP sudah berjalan.

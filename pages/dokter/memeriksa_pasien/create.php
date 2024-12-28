@@ -141,7 +141,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan_periksa'])) {
               <div class="form-group">
                 <label for="catatan">Catatan</label>
                 <input type="text" class="form-control" id="catatan" name="catatan">
-              </ ```php
               </div>
 
               <div class="form-group mt-3">
