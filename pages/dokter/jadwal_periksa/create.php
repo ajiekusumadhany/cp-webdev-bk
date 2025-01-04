@@ -18,6 +18,13 @@ if (isset($_POST['submit'])) {
     $jam_mulai = $_POST['jam_mulai'];
     $jam_selesai = $_POST['jam_selesai'];
 
+    $query_ambil_jadwal = "select hari from jadwal_periksa where id_dokter ='$id_dokter' and hari = '$hari'";
+    $stmt_ambil_jadwal= $mysqli->prepare($query_ambil_jadwal);
+    $stmt_ambil_jadwal->execute();
+    $cek_jadwal = $stmt_ambil_jadwal->get_result();
+
+    if ($cek_jadwal->num_rows < 1){
+
     // Proses insert data ke database
     $sql = "INSERT INTO jadwal_periksa (id_dokter, hari, jam_mulai, jam_selesai, status) VALUES (?, ?, ?, ?, 'N')";
     $stmt = $mysqli->prepare($sql);
@@ -34,6 +41,9 @@ if (isset($_POST['submit'])) {
     } else {
         $error_message = 'Gagal menyiapkan query: ' . $mysqli->error;
     }
+}else{
+    $error_message = 'Sudah ada jadwal praktek di hari: ' .$hari . $mysqli->error;
+}
 
     // Menyimpan pesan ke dalam sesi
     if (isset($success_message)) {

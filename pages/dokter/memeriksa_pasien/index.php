@@ -11,12 +11,22 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
 } 
 
 // Query untuk mengambil keluhan dan nama pasien
-$query_periksa_pasien= "SELECT dp.id, dp.keluhan, p.nama, dp.status_periksa  
-                        FROM daftar_poli dp 
-                        JOIN pasien p ON dp.id_pasien = p.id";
+$query_periksa_pasien= "SELECT dp.id, dp.keluhan, p.nama, dp.status_periksa, dp.id_jadwal, jp.id, jp.id_dokter, d.id
+                        FROM daftar_poli dp
+                        JOIN pasien p ON dp.id_pasien = p.id
+                        INNER JOIN jadwal_periksa jp  ON dp.id_jadwal = jp.id
+                        INNER JOIN dokter d ON jp.id_dokter = d.id WHERE d.id=?";
+
 $stmt_periksa_pasien= $mysqli->prepare($query_periksa_pasien);
+$stmt_periksa_pasien->bind_param("i", $_SESSION['user_id']); 
 $stmt_periksa_pasien->execute();
 $periksa_pasien = $stmt_periksa_pasien->get_result();
+
+// $stmt = $mysqli->prepare($query);
+// $stmt->bind_param("i", $_SESSION['user_id']); 
+
+// // Eksekusi pernyataan
+// $stmt->execute();
 
 if (!$periksa_pasien) {
     die("Error: " . $mysqli->error);
