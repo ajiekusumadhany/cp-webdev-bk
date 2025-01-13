@@ -162,8 +162,8 @@ if (!$result) {
           <th scope="col">No</th>
           <th scope="col">Nama</th>
           <th scope="col">Alamat</th>
-          <th scope="col">No. KTP</th>
           <th scope="col">No. Hp</th>
+          <th scope="col">Poli</th>
           <th scope="col">Aksi</th>
         </tr>
       </thead>
@@ -210,12 +210,16 @@ function showDoctorForm(action, id = null, nama = '', alamat = '', no_hp = '', i
             <input type="text" id="alamat" name="alamat" class="swal2-input" value="${alamat}" placeholder="Alamat" required>
             <input type="text" id="no_hp" name="no_hp" class="swal2-input" value="${no_hp}" placeholder="No. HP" required>
             <select id="id_poli" name="id_poli" class="swal2-select" required>
-            <?php while ($row_poli = $result_poli->fetch_assoc()) { ?>
-                <option value="<?php echo $row_poli['id']; ?>"><?php echo $row_poli['nama_poli']; ?></option>
-            <?php } ?>
-
-
+                <?php 
+                $result_poli->data_seek(0); // Reset pointer ke awal
+                while ($row_poli = $result_poli->fetch_assoc()) { ?>
+                            <option value="<?php echo $row_poli['id']; ?>"
+                                    ${id_poli == "<?php echo $row_poli['id']; ?>" ? 'selected' : ''}>
+                                    <?php echo $row_poli['nama_poli']; ?>
+                            </option>
+                <?php } ?>
             </select>
+
 
 
         </form>
