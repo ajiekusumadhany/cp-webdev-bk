@@ -36,24 +36,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     exit;
 }
 
-// Cek apakah ada ID yang dikirimkan melalui GET untuk edit
+// Cek apakah ada 'action' dan 'id' yang dikirimkan melalui GET untuk edit
 if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['id'])) {
-    $id = (int)$_GET['id']; // Ambil ID dari GET
+    $id = (int)$_GET['id']; // Ambil ID dari GET dan pastikan bahwa ID adalah integer
 
-    // Query untuk mengambil data pasien berdasarkan ID
-    $ambil = mysqli_query($mysqli, "SELECT * FROM pasien WHERE id='" . $id . "'");
-
-    // Cek apakah query berhasil
-    if ($ambil) {
-        $data = mysqli_fetch_assoc($ambil);
+    // Query untuk mengambil data pasien berdasarkan ID dengan prepared statement
+    $query = "SELECT * FROM pasien WHERE id = ?";
+    $stmt = $mysqli->prepare($query);
+    
+    // Bind parameter ID ke prepared statement
+    $stmt->bind_param("i", $id);
+    
+    // Eksekusi query
+    $stmt->execute();
+    
+    // Ambil hasil query
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        // Ambil data pasien yang ditemukan
+        $data = $result->fetch_assoc();
         $nama = $data['nama'];
         $alamat = $data['alamat'];
         $no_hp = $data['no_hp'];
         $no_ktp = $data['no_ktp'];
         $no_rm = $data['no_rm'];
     } else {
-        echo "Error: " . mysqli_error($mysqli); 
+        // Handle jika data pasien tidak ditemukan
+        die('Pasien tidak ditemukan.');
     }
+} else {
+    // // Mode tambah: Generate no_rm baru saat mode tambah
+    // $current_year_month = date('Ym');
+    
+    // // Query untuk menghitung jumlah pasien dengan no_rm yang dimulai dengan tahun-bulan
+    // $query_count = "SELECT COUNT(*) as total FROM pasien WHERE no_rm LIKE ?";
+    // $stmt = $mysqli->prepare($query_count);
+    
+    // // Bind parameter (tahun-bulan) ke prepared statement
+    // $like_value = $current_year_month . '%';
+    // $stmt->bind_param("s", $like_value);
+    
+    // // Eksekusi query
+    // $stmt->execute();
+    
+    // // Ambil hasil query
+    // $result_count = $stmt->get_result();
+    // $row_count = $result_count->fetch_assoc();
+    
+    // // Hitung total pasien dan buat no_rm baru
+    // $total_pasien = $row_count['total'] + 1;
+    // $no_rm = $current_year_month . '-' . str_pad($total_pasien, 3, '0', STR_PAD_LEFT);
+    
+   
+
+    // Query untuk mencari no_rm tertinggi yang ada
+    $current_year_month = date('Ym');
+    $query_max_rm = "SELECT MAX(CAST(SUBSTRING(no_rm, LENGTH(?) + 2) AS UNSIGNED)) as max_no_rm FROM pasien WHERE no_rm LIKE ?";
+    $stmt = $mysqli->prepare($query_max_rm);
+
+    // Bind parameter (tahun-bulan) ke prepared statement
+    $like_value = $current_year_month . '%';
+    $stmt->bind_param("ss", $current_year_month, $like_value);
+
+    // Eksekusi query
+    $stmt->execute();
+
+    // Ambil hasil query
+    $result_max = $stmt->get_result();
+    $row_max = $result_max->fetch_assoc();
+
+    // Hitung total_pasien yang baru
+    $total_pasien = $row_max['max_no_rm'] + 1;
+    $no_rm = $current_year_month . '-' . str_pad($total_pasien, 3, '0', STR_PAD_LEFT);
+
+
+    // Inisialisasi variabel lainnya
+    $nama = '';
+    $alamat = '';
+    $no_hp = '';
+    $no_ktp = '';
 }
 
 // Proses penyimpanan atau update data
@@ -66,59 +128,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $no_ktp = $_POST['no_ktp'];
     $no_rm = $_POST['no_rm'] ?? null;
 
-        // Jika ID ada, lakukan update, jika tidak, lakukan insert
-        if ($id) {
-            // Cek apakah no_ktp sudah terdaftar di database selain pasien yang sedang diupdate
-            $query = "SELECT * FROM pasien WHERE no_ktp = ? AND id != ?";
-            $stmt = $mysqli->prepare($query);
-            if ($stmt) {
-                $stmt->bind_param("si", $no_ktp, $id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                if ($result->num_rows > 0) {
-                    $error_message = "Pasien dengan No KTP ini sudah terdaftar.";
-                } else {
-                    // Proses update data ke database
-                    $sql = "UPDATE pasien SET nama = ?, alamat = ?, no_hp = ?, no_ktp = ?, no_rm = ? WHERE id = ?";
-                    $stmt = $mysqli->prepare($sql);
-                    if ($stmt) {
-                        $stmt->bind_param("sssssi", $nama, $alamat, $no_hp, $no_ktp, $no_rm, $id);
-                        $result = $stmt->execute();
-                        $success_message = $result ? 'Data pasien berhasil diperbarui' : 'Gagal memperbarui data pasien: ' . $mysqli->error;
-                    } else {
-                        $error_message = 'Gagal menyiapkan query';
-                    }
-                }
-            } else {
-                $error_message = 'Gagal menyiapkan query';
-            }
-        } else {
-            // Cek apakah pasien sudah terdaftar berdasarkan no KTP
-            $query = "SELECT * FROM pasien WHERE no_ktp = '$no_ktp'";
-            $result = mysqli_query($mysqli, $query);
-
-            if (mysqli_num_rows($result) > 0) {
+    // Jika ID ada, lakukan update, jika tidak, lakukan insert
+    if ($id) {
+        // Cek apakah no_ktp sudah terdaftar di database selain pasien yang sedang diupdate
+        $query = "SELECT * FROM pasien WHERE no_ktp = ? AND id != ?";
+        $stmt = $mysqli->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param("si", $no_ktp, $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
                 $error_message = "Pasien dengan No KTP ini sudah terdaftar.";
             } else {
-                // Proses insert data ke database
-                $sql = "INSERT INTO pasien (nama, alamat, no_hp, no_ktp, no_rm) VALUES (?, ?, ?, ?, ?)";
+                // Proses update data ke database
+                $sql = "UPDATE pasien SET nama = ?, alamat = ?, no_hp = ?, no_ktp = ?, no_rm = ? WHERE id = ?";
                 $stmt = $mysqli->prepare($sql);
                 if ($stmt) {
-                    $stmt->bind_param("sssss", $nama, $alamat, $no_hp, $no_ktp, $no_rm);
+                    $stmt-> bind_param("sssssi", $nama, $alamat, $no_hp, $no_ktp, $no_rm, $id);
                     $result = $stmt->execute();
-                    $success_message = $result ? 'Data pasien berhasil disimpan' : 'Gagal menyimpan data pasien: ' . $mysqli->error;
+                    $success_message = $result ? 'Data pasien berhasil diperbarui' : 'Gagal memperbarui data pasien: ' . $mysqli->error;
                 } else {
                     $error_message = 'Gagal menyiapkan query';
                 }
             }
+        } else {
+            $error_message = 'Gagal menyiapkan query';
+        }
+    } else {
+        // Cek apakah pasien sudah terdaftar berdasarkan no KTP
+        $query = "SELECT * FROM pasien WHERE no_ktp = '$no_ktp'";
+        $result = mysqli_query($mysqli, $query);
+
+        if (mysqli_num_rows($result) > 0 ) {
+            $error_message = "Pasien dengan No KTP ini sudah terdaftar.";
+        } else {
+            // Proses insert data ke database
+            $sql = "INSERT INTO pasien (nama, alamat, no_hp, no_ktp, no_rm) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $mysqli->prepare($sql);
+            if ($stmt) {
+                $stmt->bind_param("sssss", $nama, $alamat, $no_hp, $no_ktp, $no_rm);
+                $result = $stmt->execute();
+                $success_message = $result ? 'Data pasien berhasil disimpan' : 'Gagal menyimpan data pasien: ' . $mysqli->error;
+            } else {
+                $error_message = 'Gagal menyiapkan query';
+            }
         }
     }
+
+    // Simpan pesan ke dalam session
     if (isset($success_message)) {
         $_SESSION['flash_message'] = ['type' => 'success', 'message' => $success_message];
     } elseif (isset($error_message)) {
         $_SESSION['flash_message'] = ['type' => 'error', 'message' => $error_message];
     }
 
+    // Redirect ke index.php
+    header('Location: index.php');
+    exit();
+}
 // Query untuk mengambil data pasien
 $query = "SELECT * FROM pasien ORDER BY nama ASC";
 $result = $mysqli->query($query);
@@ -175,7 +242,8 @@ if (!$result) {
       <div class="container-fluid">
 
 <div class="container container-pasien">
-    <button class="mb-3 btn btn-primary" onclick="showPasienForm('add');"><i class="bi bi-person-plus-fill"></i> Tambah Pasien</button>
+    <button class="mb-3 btn btn-primary" onclick="showPasienForm('add', null, '', '', '', '', '<?php echo $no_rm; ?>');
+;"><i class="bi bi-person-plus-fill"></i> Tambah Pasien</button>
     
 <div class="card">
   <div class="card-body table-responsive">
@@ -188,7 +256,7 @@ if (!$result) {
           <th scope="col">Alamat</th>
           <th scope="col">No. Ktp</th>
           <th scope="col">No. Hp</th>
-          <th scope="col">Poli</th>
+          <th scope="col">No. Rm</th>
           <th scope="col">Aksi</th>
         </tr>
       </thead>
@@ -220,10 +288,9 @@ function showPasienForm(action, id = null, nama = '', alamat = '', no_hp = '', n
     const buttonText = action === 'add' ? 'Simpan' : 'Update';
 
     if (action === 'edit') {
-        const newUrl = `index.php?page=pasien&action=edit&id=${id}`;
-        window.history.pushState({ id: id }, '', newUrl);
+    const newUrl = `index.php?page=pasien&action=edit&id=${id}`;
+    window.history.pushState({ id: id }, '', newUrl);
     }
-
     // Menampilkan SweetAlert dengan formulir
     Swal.fire({
         title: title,
@@ -234,17 +301,7 @@ function showPasienForm(action, id = null, nama = '', alamat = '', no_hp = '', n
                 <input type="text" id="alamat" name="alamat" class="swal2-input" value="${alamat}" placeholder="Alamat" required>
                 <input type="text" id="no_ktp" name="no_ktp" class="swal2-input" value="${no_ktp}" placeholder="No. KTP" required>
                 <input type="text" id="no_hp" name="no_hp" class="swal2-input" value="${no_hp}" placeholder="No. HP" required>
-                <?php
-                {
-                    $current_year_month = date('Ym');
-                    $query_count = "SELECT COUNT(*) as total FROM pasien WHERE no_rm LIKE '$current_year_month%'";
-                    $result_count = $mysqli->query($query_count);
-                    $row_count = $result_count->fetch_assoc();
-                    $total_pasien = $row_count['total'] + 1;
-                    $no_rm = $current_year_month . '-' . str_pad($total_pasien, 3, '0', STR_PAD_LEFT);
-                }
-                ?>
-                <input type="text" id="no_rm" name="no_rm" class="swal2-input" value="<?php echo $no_rm; ?>" placeholder="No. RM" readonly>
+                <input type="text" id="no_rm" name="no_rm" class="swal2-input" value="${no_rm}" placeholder="No. RM" readonly>
             </form>
         `,
         showCancelButton: true,
@@ -264,7 +321,6 @@ function showPasienForm(action, id = null, nama = '', alamat = '', no_hp = '', n
     }).then((result) => {
         if (result.isConfirmed) {
             const form = document.getElementById('pasienForm');
-            form.action = `index.php?page=pasien&action=${action}`;
             form.submit();
         }
     });
