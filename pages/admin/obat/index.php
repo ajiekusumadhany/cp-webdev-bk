@@ -153,9 +153,9 @@ if (!$result) {
 
 <div class="container container-obat">
     <button class="mb-3 btn btn-primary" onclick="showObatForm('add');"><i class="bi bi-person-plus-fill"></i> Tambah Obat</button>
-    
+    <div class="card">
     <div class="card-body table-responsive">
-    <table id="myTable" class="table table-striped">
+    <table id="myTable" class="table table-striped ">
       <thead>
         <tr>
           <th scope="col">No</th>
@@ -183,6 +183,7 @@ if (!$result) {
     ?>
 </tbody>
     </table>
+</div>
 </div>
 </div>
 <script>
