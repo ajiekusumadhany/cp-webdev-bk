@@ -32,29 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'tanggapi') {
-    $id = isset($_POST['id']) ? $_POST['id'] : null;
-    $jawaban = isset($_POST['jawaban']) ? $_POST['jawaban'] : '';
-
-    if ($id && !empty($jawaban)) {
-        $sql = "UPDATE konsultasi SET jawaban = ? WHERE id = ?";
-        $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("si", $jawaban, $id);
-
-        if ($stmt->execute()) {
-            $_SESSION['flash_message'] = ['type' => 'success', 'message' => 'Jawaban berhasil diperbarui'];
-        } else {
-            $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Gagal memperbarui jawaban: ' . $stmt->error];
-        }
-        $stmt->close();
-    } else {
-        $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Harap isi semua kolom!'];
-    }
-
-    header('Location: ./');
-    exit;
-}
-
 // Proses penyimpanan atau update data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? $_POST['id'] : null;
@@ -69,16 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = "UPDATE konsultasi SET jawaban = ? WHERE id = ?";
             $stmt = $mysqli->prepare($sql);
             $stmt->bind_param("si", $jawaban, $id);
-        } else {
-            if (empty($subject) || empty($pertanyaan) || empty($id_dokter) || empty($id_pasien)) {
-                $_SESSION['flash_message'] = ['type' => 'error', 'message' => 'Harap isi semua kolom!'];
-            }else{
-            // Insert
-            $sql = "INSERT INTO konsultasi (subject, pertanyaan, id_dokter, id_pasien) VALUES (?, ?, ?, ?)";
-            $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param("ssii", $subject, $pertanyaan, $id_dokter, $id_pasien);
-            }
-        }
+        } 
 
         if ($stmt->execute()) {
             $_SESSION['flash_message'] = ['type' => 'success', 'message' => 'Data berhasil disimpan'];
@@ -210,8 +178,8 @@ while ($row = $result->fetch_assoc()) {
 <script>
 // Fungsi showDoctorForm
 function showDoctorForm(action, id = null, subject = '', pertanyaan = '', id_dokter = '', jawaban = '') {
-    const title = action === 'add' ? 'Tambah Konsultasi' : 'Edit Jawaban';
-    const buttonText = action === 'add' ? 'Simpan' : 'Update';
+    const title = 'Jawab';
+    const buttonText = 'Simpan';
 
     if (action === 'edit') {
         const newUrl = `index.php?action=edit&id=${id}`;
