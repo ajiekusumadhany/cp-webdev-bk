@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
 } 
 
 // Query untuk mengambil keluhan dan nama pasien
-$query_periksa_pasien= "SELECT dp.id, dp.keluhan, p.nama, dp.status_periksa, dp.id_jadwal, jp.id, jp.id_dokter, d.id
+$query_periksa_pasien= "SELECT dp.id as id_poli, dp.keluhan, p.nama, dp.status_periksa, dp.id_jadwal, jp.id, jp.id_dokter, d.id
                         FROM daftar_poli dp
                         JOIN pasien p ON dp.id_pasien = p.id
                         INNER JOIN jadwal_periksa jp  ON dp.id_jadwal = jp.id
@@ -95,11 +95,11 @@ if (!$periksa_pasien) {
                             <td><?php echo htmlspecialchars($row['keluhan']); ?></td>
                             <td>
                                 <?php if ($row['status_periksa'] == 0): ?>
-                                    <a href="create.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">
+                                    <a href="create.php?id=<?php echo $row['id_poli']; ?>" class="btn btn-primary">
                                         <i class="fas fa-stethoscope"></i> Periksa
                                     </a>
                                 <?php elseif ($row['status_periksa'] == 1): ?>
-                                    <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-warning">
+                                    <a href="edit.php?id=<?php echo $row['id_poli']; ?>" class="btn btn-warning">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
                                 <?php endif; ?>

@@ -118,6 +118,16 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="<?php echo $base_url; ?>pages/dokter/konsultasi" class="nav-link">
+            <i class="nav-icon fas fa-solid fa-comment-medical"></i>
+
+              <p>
+                Konsultasi
+                <span class="right badge badge-danger">Dokter</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="<?php echo $base_url; ?>pages/dokter/profil" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
               <p>
@@ -141,6 +151,15 @@
               <i class="nav-icon fas fa-hospital"></i>
               <p>
                 Poli
+                <span class="right badge badge-primary">Pasien</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?php echo $base_url; ?>pages/pasien/konsultasi" class="nav-link">
+            <i class="nav-icon fas fa-solid fa-comment-medical"></i>
+              <p>
+                Konsultasi
                 <span class="right badge badge-primary">Pasien</span>
               </p>
             </a>

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 28 Des 2024 pada 03.29
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Generation Time: Jan 18, 2025 at 07:04 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.1.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `daftar_poli`
+-- Table structure for table `daftar_poli`
 --
 
 CREATE TABLE `daftar_poli` (
@@ -37,20 +37,17 @@ CREATE TABLE `daftar_poli` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `daftar_poli`
+-- Dumping data for table `daftar_poli`
 --
 
 INSERT INTO `daftar_poli` (`id`, `id_pasien`, `id_jadwal`, `keluhan`, `no_antrian`, `status_periksa`) VALUES
-(12, 82, 5, 'sakit gigi', 1, 1),
-(13, 82, 6, 'pusing', 1, 0),
-(14, 82, 2, 'batuk', 1, 1),
-(15, 82, 1, 'flue', 1, 1),
-(16, 82, 6, 'sakit kepala pusing', 2, 1);
+(17, 82, 2, 'sakit gigi', 1, 0),
+(18, 82, 1, 'hhh', 1, 0);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `detail_periksa`
+-- Table structure for table `detail_periksa`
 --
 
 CREATE TABLE `detail_periksa` (
@@ -59,31 +56,10 @@ CREATE TABLE `detail_periksa` (
   `id_obat` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data untuk tabel `detail_periksa`
---
-
-INSERT INTO `detail_periksa` (`id`, `id_periksa`, `id_obat`) VALUES
-(8, 5, 2),
-(9, 5, 4),
-(10, 5, 34),
-(11, 6, 3),
-(12, 6, 14),
-(13, 6, 15),
-(58, 7, 2),
-(59, 7, 3),
-(60, 7, 4),
-(61, 7, 5),
-(62, 7, 15),
-(72, 8, 2),
-(73, 8, 5),
-(74, 8, 20),
-(75, 8, 23);
-
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dokter`
+-- Table structure for table `dokter`
 --
 
 CREATE TABLE `dokter` (
@@ -95,7 +71,7 @@ CREATE TABLE `dokter` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `dokter`
+-- Dumping data for table `dokter`
 --
 
 INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`, `id_poli`) VALUES
@@ -116,7 +92,7 @@ INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`, `id_poli`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `jadwal_periksa`
+-- Table structure for table `jadwal_periksa`
 --
 
 CREATE TABLE `jadwal_periksa` (
@@ -129,7 +105,7 @@ CREATE TABLE `jadwal_periksa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `jadwal_periksa`
+-- Dumping data for table `jadwal_periksa`
 --
 
 INSERT INTO `jadwal_periksa` (`id`, `id_dokter`, `hari`, `jam_mulai`, `jam_selesai`, `status`) VALUES
@@ -146,7 +122,33 @@ INSERT INTO `jadwal_periksa` (`id`, `id_dokter`, `hari`, `jam_mulai`, `jam_seles
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `obat`
+-- Table structure for table `konsultasi`
+--
+
+CREATE TABLE `konsultasi` (
+  `id` int(11) NOT NULL,
+  `subject` varchar(50) NOT NULL,
+  `pertanyaan` text NOT NULL,
+  `jawaban` text NOT NULL,
+  `tgl_konsultasi` datetime NOT NULL DEFAULT current_timestamp(),
+  `id_pasien` int(1) NOT NULL,
+  `id_dokter` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `konsultasi`
+--
+
+INSERT INTO `konsultasi` (`id`, `subject`, `pertanyaan`, `jawaban`, `tgl_konsultasi`, `id_pasien`, `id_dokter`) VALUES
+(2, 'Tesa', 'halo coba?', '', '2025-01-18 10:35:46', 82, 37),
+(3, 'Tes Aja', 'halo coba 2?', '', '2025-01-18 10:53:24', 82, 32),
+(4, 'aaa', 'hi', 'aavfg', '2025-01-18 11:01:31', 82, 22),
+(5, 'halo mau tanya', 'jadi gini...', '', '2025-01-18 12:34:21', 82, 22);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `obat`
 --
 
 CREATE TABLE `obat` (
@@ -157,7 +159,7 @@ CREATE TABLE `obat` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `obat`
+-- Dumping data for table `obat`
 --
 
 INSERT INTO `obat` (`id`, `nama_obat`, `kemasan`, `harga`) VALUES
@@ -217,7 +219,7 @@ INSERT INTO `obat` (`id`, `nama_obat`, `kemasan`, `harga`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pasien`
+-- Table structure for table `pasien`
 --
 
 CREATE TABLE `pasien` (
@@ -230,7 +232,7 @@ CREATE TABLE `pasien` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `pasien`
+-- Dumping data for table `pasien`
 --
 
 INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_ktp`, `no_hp`, `no_rm`) VALUES
@@ -260,7 +262,7 @@ INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_ktp`, `no_hp`, `no_rm`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `periksa`
+-- Table structure for table `periksa`
 --
 
 CREATE TABLE `periksa` (
@@ -271,20 +273,10 @@ CREATE TABLE `periksa` (
   `biaya_periksa` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data untuk tabel `periksa`
---
-
-INSERT INTO `periksa` (`id`, `id_daftar_poli`, `tgl_periksa`, `catatan`, `biaya_periksa`) VALUES
-(5, 12, '2024-12-27 22:30:00', 'Banyak minum air', 162000),
-(6, 14, '2024-12-28 08:00:00', 'Banyak minum air', 163000),
-(7, 15, '2024-12-28 08:27:00', 'halo', 161000),
-(8, 16, '2024-12-28 08:52:00', 'diminum 2x sehari', 173000);
-
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `poli`
+-- Table structure for table `poli`
 --
 
 CREATE TABLE `poli` (
@@ -294,7 +286,7 @@ CREATE TABLE `poli` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `poli`
+-- Dumping data for table `poli`
 --
 
 INSERT INTO `poli` (`id`, `nama_poli`, `keterangan`) VALUES
@@ -308,7 +300,7 @@ INSERT INTO `poli` (`id`, `nama_poli`, `keterangan`) VALUES
 --
 
 --
--- Indeks untuk tabel `daftar_poli`
+-- Indexes for table `daftar_poli`
 --
 ALTER TABLE `daftar_poli`
   ADD PRIMARY KEY (`id`),
@@ -316,7 +308,7 @@ ALTER TABLE `daftar_poli`
   ADD KEY `id_jadwal` (`id_jadwal`);
 
 --
--- Indeks untuk tabel `detail_periksa`
+-- Indexes for table `detail_periksa`
 --
 ALTER TABLE `detail_periksa`
   ADD PRIMARY KEY (`id`),
@@ -324,128 +316,149 @@ ALTER TABLE `detail_periksa`
   ADD KEY `id_obat` (`id_obat`);
 
 --
--- Indeks untuk tabel `dokter`
+-- Indexes for table `dokter`
 --
 ALTER TABLE `dokter`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_poli` (`id_poli`);
 
 --
--- Indeks untuk tabel `jadwal_periksa`
+-- Indexes for table `jadwal_periksa`
 --
 ALTER TABLE `jadwal_periksa`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_dokter` (`id_dokter`);
 
 --
--- Indeks untuk tabel `obat`
+-- Indexes for table `konsultasi`
+--
+ALTER TABLE `konsultasi`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_pasien` (`id_pasien`),
+  ADD KEY `id_dokter` (`id_dokter`);
+
+--
+-- Indexes for table `obat`
 --
 ALTER TABLE `obat`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `pasien`
+-- Indexes for table `pasien`
 --
 ALTER TABLE `pasien`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `periksa`
+-- Indexes for table `periksa`
 --
 ALTER TABLE `periksa`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_daftar_poli` (`id_daftar_poli`);
 
 --
--- Indeks untuk tabel `poli`
+-- Indexes for table `poli`
 --
 ALTER TABLE `poli`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `daftar_poli`
+-- AUTO_INCREMENT for table `daftar_poli`
 --
 ALTER TABLE `daftar_poli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT untuk tabel `detail_periksa`
+-- AUTO_INCREMENT for table `detail_periksa`
 --
 ALTER TABLE `detail_periksa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
--- AUTO_INCREMENT untuk tabel `dokter`
+-- AUTO_INCREMENT for table `dokter`
 --
 ALTER TABLE `dokter`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
--- AUTO_INCREMENT untuk tabel `jadwal_periksa`
+-- AUTO_INCREMENT for table `jadwal_periksa`
 --
 ALTER TABLE `jadwal_periksa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT untuk tabel `obat`
+-- AUTO_INCREMENT for table `konsultasi`
+--
+ALTER TABLE `konsultasi`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `obat`
 --
 ALTER TABLE `obat`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
--- AUTO_INCREMENT untuk tabel `pasien`
+-- AUTO_INCREMENT for table `pasien`
 --
 ALTER TABLE `pasien`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
--- AUTO_INCREMENT untuk tabel `periksa`
+-- AUTO_INCREMENT for table `periksa`
 --
 ALTER TABLE `periksa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `poli`
+-- AUTO_INCREMENT for table `poli`
 --
 ALTER TABLE `poli`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `daftar_poli`
+-- Constraints for table `daftar_poli`
 --
 ALTER TABLE `daftar_poli`
   ADD CONSTRAINT `daftar_poli_ibfk_1` FOREIGN KEY (`id_pasien`) REFERENCES `pasien` (`id`),
   ADD CONSTRAINT `daftar_poli_ibfk_2` FOREIGN KEY (`id_jadwal`) REFERENCES `jadwal_periksa` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `detail_periksa`
+-- Constraints for table `detail_periksa`
 --
 ALTER TABLE `detail_periksa`
   ADD CONSTRAINT `detail_periksa_ibfk_1` FOREIGN KEY (`id_periksa`) REFERENCES `periksa` (`id`),
   ADD CONSTRAINT `detail_periksa_ibfk_2` FOREIGN KEY (`id_obat`) REFERENCES `obat` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `dokter`
+-- Constraints for table `dokter`
 --
 ALTER TABLE `dokter`
   ADD CONSTRAINT `dokter_ibfk_1` FOREIGN KEY (`id_poli`) REFERENCES `poli` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `jadwal_periksa`
+-- Constraints for table `jadwal_periksa`
 --
 ALTER TABLE `jadwal_periksa`
   ADD CONSTRAINT `jadwal_periksa_ibfk_1` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id`);
 
 --
--- Ketidakleluasaan untuk tabel `periksa`
+-- Constraints for table `konsultasi`
+--
+ALTER TABLE `konsultasi`
+  ADD CONSTRAINT `konsultasi_ibfk_1` FOREIGN KEY (`id_pasien`) REFERENCES `pasien` (`id`),
+  ADD CONSTRAINT `konsultasi_ibfk_2` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id`);
+
+--
+-- Constraints for table `periksa`
 --
 ALTER TABLE `periksa`
   ADD CONSTRAINT `periksa_ibfk_1` FOREIGN KEY (`id_daftar_poli`) REFERENCES `daftar_poli` (`id`);
