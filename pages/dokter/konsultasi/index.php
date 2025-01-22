@@ -152,23 +152,24 @@ while ($row = $result->fetch_assoc()) {
     echo "<td>" . htmlspecialchars($row['subject']) . "</td>";
     echo "<td>" . htmlspecialchars($row['pertanyaan']) . "</td>";
    
-    // Cek apakah jawaban kosong
     if (empty($row['jawaban'])) {
         echo "<td>Belum ada jawaban</td>";
         echo "<td>
-            <button class='btn btn-sm btn-primary' onclick='showDoctorForm(\"edit\", " . $row['id'] . ")'>
+            <button class='btn btn-sm btn-primary' onclick='showDoctorForm(\"edit\", {$row['id']}, \"" . addslashes($row['subject']) . "\", \"" . addslashes($row['pertanyaan']) . "\", \"" . addslashes($row['id_dokter']) . "\", \"\")'>
                 <i class='bi bi-chat-dots'></i> Tanggapi
             </button>
         </td>";
     } else {
         echo "<td>" . htmlspecialchars($row['jawaban']) . "</td>";
         echo "<td>
-            <button class='btn btn-sm btn-success' onclick='showDoctorForm(\"edit\", " . $row['id'] . ", \"" . addslashes($row['subject']) . "\", \"" . addslashes($row['pertanyaan']) . "\", \"" . addslashes($row['id_dokter']) . "\")'>
+            <button class='btn btn-sm btn-success' onclick='showDoctorForm(\"edit\", {$row['id']}, \"" . addslashes($row['subject']) . "\", \"" . addslashes($row['pertanyaan']) . "\", \"" . addslashes($row['id_dokter']) . "\", \"" . addslashes($row['jawaban']) . "\")'>
                 <i class='bi bi-pencil-square'></i> Edit
             </button>
         </td>";
     }
-    }
+    echo "</tr>";
+}
+
     ?>
 </tbody>
     </table>
@@ -178,38 +179,34 @@ while ($row = $result->fetch_assoc()) {
 <script>
 // Fungsi showDoctorForm
 function showDoctorForm(action, id = null, subject = '', pertanyaan = '', id_dokter = '', jawaban = '') {
-    const title = 'Jawab';
-    const buttonText = 'Simpan';
+    const title = 'Jawaban';
+    const buttonText = 'Simpan ';
 
     if (action === 'edit') {
         const newUrl = `index.php?action=edit&id=${id}`;
         window.history.pushState({ id: id }, '', newUrl);
     }
 
-
-    // Menampilkan SweetAlert dengan formulir
     Swal.fire({
         title: title,
         html: `
-        <form id="doctorForm" method="POST">
-            ${action === 'edit' ? `<input type="hidden" name="id" value="${id}">` : ''}
-            ${action === 'add' ? `<input type="text" id="subject" name="subject" class="swal2-input" value="${subject}" placeholder="Subject" required>`: ''}
-
-            ${action === 'add' ? `<input type="text" id="pertanyaan" name="pertanyaan" class="swal2-input" value="${pertanyaan}" placeholder="Pertanyaan" required>` : ''}
-            ${action === 'add' ? `<select id="id_dokter" name="id_dokter" class="swal2-select" required>
-                <?php 
-                $result_dokter->data_seek(0); // Reset pointer ke awal
-                while ($row_dokter = $result_dokter->fetch_assoc()) { ?>
-                            <option value="<?php echo $row_dokter['id']; ?>"
-                                    ${id_dokter == "<?php echo $row_dokter['id']; ?>" ? 'selected' : ''}>
-                                    <?php echo $row_dokter['nama']; ?>
+            <form id="doctorForm" method="POST">
+                ${action === 'edit' ? `<input type="hidden" name="id" value="${id}">` : ''}
+                ${action === 'add' ? `
+                    <input type="text" id="subject" name="subject" class="swal2-input" value="${subject}" placeholder="Subject" required>
+                    <input type="text" id="pertanyaan" name="pertanyaan" class="swal2-input" value="${pertanyaan}" placeholder="Pertanyaan" required>
+                    <select id="id_dokter" name="id_dokter" class="swal2-select" required>
+                        <?php 
+                        $result_dokter->data_seek(0); 
+                        while ($row_dokter = $result_dokter->fetch_assoc()) { ?>
+                            <option value="<?php echo $row_dokter['id']; ?>" ${id_dokter == "<?php echo $row_dokter['id']; ?>" ? 'selected' : ''}>
+                                <?php echo $row_dokter['nama']; ?>
                             </option>
-                <?php } ?>
-            </select>` : ''}
-            ${action === 'edit' ? `<input type="text" id="jawaban" name="jawaban" class="swal2-input" value="${jawaban}" placeholder="Jawaban" required>` : ''}
-
-
-        </form>
+                        <?php } ?>
+                    </select>` : ''}
+                ${action === 'edit' ? `
+                    <input type="text" id="jawaban" name="jawaban" class="swal2-input" value="${jawaban}" placeholder="Jawaban" required>` : ''}
+            </form>
         `,
         showCancelButton: true,
         confirmButtonText: buttonText,
