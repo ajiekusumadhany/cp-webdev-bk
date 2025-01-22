@@ -195,8 +195,8 @@ $result_riwayat = $stmt_riwayat->get_result();
           <!-- Registration poli history -->
           <div class="card">
             <h5 class="card-header bg-primary">Riwayat daftar poli</h5>
-            <div class="card-body">
-            <table class="table table-striped">
+            <div class="card-body table-responsive">
+            <table class="table table-striped responsive">
                 <thead>
                     <tr>
                         <th scope="col">No.</th>
